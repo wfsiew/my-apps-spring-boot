@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Component
+//@Component
 public class AppScheduler {
 
     // ref: https://docs.oracle.com/cd/E12058_01/doc/doc.1014/e12030/cron_expressions.htm
