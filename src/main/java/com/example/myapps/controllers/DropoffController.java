@@ -41,7 +41,7 @@ public class DropoffController {
         return repository.findAll();
     }
 
-    @GetMapping("/testreport")
+    @GetMapping("/pdf")
     @ResponseBody
     public void getPdf(HttpServletResponse response) {
         final InputStream stream = this.getClass().getResourceAsStream("/reports/Shipping_Label.jasper");
