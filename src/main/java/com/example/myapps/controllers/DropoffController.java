@@ -2,6 +2,7 @@ package com.example.myapps.controllers;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,6 +27,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 
 @RestController
+@RequestMapping("/dropoff")
 public class DropoffController {
 
     private static final Logger log = LoggerFactory.getLogger(DropoffController.class);
@@ -35,7 +38,7 @@ public class DropoffController {
     @Autowired
     private DataSource dataSource;
 
-    @GetMapping(value = "/dropoff/list")
+    @GetMapping(value = "/list")
     public Iterable<DropoffHeader> getAll() {
         log.info("findAll");
         return repository.findAll();
@@ -43,23 +46,24 @@ public class DropoffController {
 
     @GetMapping("/pdf")
     @ResponseBody
-    public void getPdf(HttpServletResponse response) {
+    public void getPdf(final HttpServletResponse response) {
         final InputStream stream = this.getClass().getResourceAsStream("/reports/Shipping_Label.jasper");
         try {
-            JasperReport jasReport = (JasperReport) JRLoader.loadObject(stream);
-            String conno = "CTT01001236918";
+            final JasperReport jasReport = (JasperReport) JRLoader.loadObject(stream);
+            final String conno = "CTT01001236918";
             final Map<String, Object> p = new HashMap<>();
             p.put("consignment_no", conno);
             p.put("is_do", "false");
-            p.put("work_dir", "C:\\learn\\my-apps-spring-boot\\src\\main\\resources\\");
+            p.put("work_dir", "C:\\learn\\my-apps-spring-boot\\src\\main\\resources\\reports\\");
 
-            // Filling the report with the employee data and additional parameters information.
+            // Filling the report with the employee data and additional parameters
+            // information.
             final JasperPrint jasperPrint = JasperFillManager.fillReport(jasReport, p, dataSource.getConnection());
             response.setContentType(MediaType.APPLICATION_PDF_VALUE);
             JasperExportManager.exportReportToPdfStream(jasperPrint, response.getOutputStream());
-        } catch (Exception e) {
+
+        } catch (final Exception e) {
             e.printStackTrace();
         }
     }
-
 }

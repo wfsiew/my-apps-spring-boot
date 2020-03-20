@@ -45,6 +45,10 @@ public class DropoffHeader {
     @Column(name = "payment_type")
     private String paymentType;
 
+    public DropoffHeader() {
+        
+    }
+
     /**
      * @return UUID return the id
      */
